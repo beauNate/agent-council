@@ -54,14 +54,14 @@ try {
     console.log(`${GREEN}  ✓ .claude/skills/agent-council${NC}`);
   }
 
-  // Copy config file to .claude/ if not exists
+  // Copy config file to skill folder if not exists
   const configSrc = path.join(packageRoot, 'council.config.yaml');
-  const configDest = path.join(claudeDir, 'council.config.yaml');
+  const configDest = path.join(skillsDest, 'council.config.yaml');
 
   if (fs.existsSync(configSrc) && !fs.existsSync(configDest)) {
     console.log(`${YELLOW}Installing config...${NC}`);
     fs.copyFileSync(configSrc, configDest);
-    console.log(`${GREEN}  ✓ .claude/council.config.yaml${NC}`);
+    console.log(`${GREEN}  ✓ .claude/skills/agent-council/council.config.yaml${NC}`);
   } else if (fs.existsSync(configDest)) {
     console.log(`${YELLOW}  ⓘ council.config.yaml already exists, skipping${NC}`);
   }
