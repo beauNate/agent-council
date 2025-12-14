@@ -20,7 +20,15 @@ Claude가 의장으로서 모든 의견을 종합하여 공통점, 차이점, �
 
 ## 설치
 
-### 1. 플러그인 설치
+### 방법 A: npx로 설치 (권장)
+
+```bash
+npx @anthropic-skills/agent-council
+```
+
+현재 프로젝트 디렉토리에 스킬 파일들이 복사됩니다.
+
+### 방법 B: Claude Code 플러그인으로 설치
 
 ```bash
 # 마켓플레이스 추가

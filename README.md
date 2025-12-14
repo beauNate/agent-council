@@ -20,7 +20,15 @@ Claude acts as the Chairman, synthesizing all opinions into a final recommendati
 
 ## Setup
 
-### 1. Install the Plugin
+### Option A: Install via npx (Recommended)
+
+```bash
+npx @anthropic-skills/agent-council
+```
+
+This copies the skill files to your current project directory.
+
+### Option B: Install via Claude Code Plugin
 
 ```bash
 # Add the marketplace
