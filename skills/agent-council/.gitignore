@@ -1,0 +1,9 @@
+# Agent Council - Ignored Files
+
+# Mapping file (contains agent identity mapping)
+# This is gitignored so the chairman CLI cannot access it
+# The mapping is shown to the user during execution
+.council-mapping
+
+# Temporary files
+*.tmp
