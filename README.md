@@ -58,7 +58,7 @@ npx github:team-attention/agent-council --target claude
 npx github:team-attention/agent-council --target both
 ```
 
-The generated `council.config.yaml` enables only detected member CLIs (e.g. `claude`, `codex`, `gemini`) and avoids adding the host target as a member.
+The generated `council.config.yaml` includes only detected member CLIs (e.g. `claude`, `codex`, `gemini`) and avoids adding the host target as a member. This filtering happens only at initial generation; later edits will not auto-remove missing CLIs.
 
 ### Option B: Install via Claude Code Plugin (Claude Code only)
 
@@ -74,7 +74,7 @@ Note (Plugin installs): **Agent Council requires Node.js**, and Claude Code plug
 
 ### 2. Install Agent CLIs
 
-Install the CLIs you want to use as council members (template includes `claude`, `codex`, `gemini`):
+Install the CLIs listed under `council.members` in your `council.config.yaml` (template includes `claude`, `codex`, `gemini`):
 
 ```bash
 # Anthropic Claude Code
@@ -87,11 +87,11 @@ Install the CLIs you want to use as council members (template includes `claude`,
 # https://github.com/google-gemini/gemini-cli
 ```
 
-Verify installation:
+Verify each member CLI:
 ```bash
-claude --version
-codex --version
-gemini --version
+command -v claude
+command -v codex
+command -v gemini
 ```
 
 ### 3. Configure Council Members (Optional)

@@ -58,7 +58,7 @@ npx github:team-attention/agent-council --target claude
 npx github:team-attention/agent-council --target both
 ```
 
-생성되는 `council.config.yaml`은 감지된 멤버 CLI(claude/codex/gemini 등)만 활성화하며, 설치 타깃(호스트)은 members에 포함되지 않도록 처리합니다.
+생성되는 `council.config.yaml`은 감지된 멤버 CLI(claude/codex/gemini 등)만 포함하며, 설치 타깃(호스트)은 members에 포함되지 않도록 처리합니다. 이 필터링은 **초기 생성 시점에만** 적용되며, 이후 편집 내용은 자동으로 정리되지 않습니다.
 
 ### 방법 B: Claude Code 플러그인으로 설치 (Claude Code 전용)
 
@@ -74,7 +74,7 @@ npx github:team-attention/agent-council --target both
 
 ### 2. Agent CLI 설치
 
-Council 멤버로 쓰고 싶은 CLI를 설치하세요(템플릿 기본 포함: `claude`, `codex`, `gemini`):
+`council.config.yaml`의 `council.members`에 적힌 CLI를 설치하세요(템플릿 기본 포함: `claude`, `codex`, `gemini`):
 
 ```bash
 # Anthropic Claude Code
@@ -87,11 +87,11 @@ Council 멤버로 쓰고 싶은 CLI를 설치하세요(템플릿 기본 포함: 
 # https://github.com/google-gemini/gemini-cli
 ```
 
-설치 확인:
+설치 확인(멤버별):
 ```bash
-claude --version
-codex --version
-gemini --version
+command -v claude
+command -v codex
+command -v gemini
 ```
 
 ### 3. Council 멤버 설정 (선택사항)

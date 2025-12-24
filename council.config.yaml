@@ -1,5 +1,7 @@
 # Agent Council Configuration
-# Add or remove council members as needed
+# Add or remove council members as needed.
+# Note: the installer filters members to detected CLIs only on initial generation.
+# After that, missing CLIs are not auto-removed and will report `missing_cli` at runtime.
 
 council:
   # Council members configuration
