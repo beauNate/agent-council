@@ -10,7 +10,37 @@ description: Collect and synthesize opinions from multiple AI Agents. Use when u
 
 ## Overview
 
-Agent Council gathers opinions from multiple AI Agents (Codex, Gemini, etc.) when facing difficult questions or decisions, with Claude acting as Chairman to synthesize the final response.
+Agent Council gathers opinions from multiple AI Agents across a **3-stage deliberation process**:
+
+1. **Technical Council** (7 members) - Unfiltered expert analysis from diverse cognitive perspectives
+2. **Ethical Sub-Chairs** (6 members) - Synthesize technical input through ethical frameworks
+3. **Chairman** - Final synthesis with "What The Chairman Might Have Missed" transparency section
+
+## Architecture
+
+```
+THE CHAIRMAN (Opus 4.5) - Final Arbiter [HIGHEST REASONING]
+    │
+    ├── Stage 1: TECHNICAL COUNCIL (7 experts) [DIVERSE PERSPECTIVES]
+    │   ├── The Architect (GPT-5.2) - Strategic systems thinking
+    │   ├── The Scholar (Codex-Max) - Deep technical analysis
+    │   ├── The Sprinter (Codex-Mini) - Pragmatic speed
+    │   ├── The Diplomat (Sonnet 4) - Balanced human factors
+    │   ├── The Monk (Haiku 4.5) - First principles
+    │   ├── The Oracle (Gemini Pro) - Research synthesis
+    │   └── The Scout (Gemini Flash) - Pattern recognition
+    │
+    ├── Stage 2: ETHICAL SUB-CHAIRS (6 frameworks) [HIGH REASONING]
+    │   ├── The Utilitarian (GPT-4o) - Consequentialism
+    │   ├── The Kantian (o3-mini) - Deontology
+    │   ├── The Aristotelian (o3) - Virtue Ethics
+    │   ├── The Pragmatist (GPT-4.1) - What works
+    │   ├── The Guardian (GPT-4.1-mini) - Care Ethics
+    │   └── The Machiavelli (GPT-4o-mini) - Realpolitik
+    │
+    └── Stage 3: CHAIRMAN SYNTHESIS
+        └── Verdict + Dissenting Views + "What Might Be Missed"
+```
 
 ## Trigger Conditions
 
@@ -21,17 +51,6 @@ This skill activates when:
 - "Ask codex and gemini for their opinions"
 - "council"
 
-## 3-Stage Process (LLM Council Method)
-
-### Stage 1: Initial Opinions
-Send the same question to each council member to collect initial opinions
-
-### Stage 2: Response Collection
-Collect and display each Agent's response to the user
-
-### Stage 3: Chairman Synthesis
-Claude (Chairman) synthesizes all responses and presents the final opinion
-
 ## Usage
 
 ### Direct Script Execution
@@ -40,86 +59,135 @@ Claude (Chairman) synthesizes all responses and presents the final opinion
 ./skills/agent-council/scripts/council.sh "your question here"
 ```
 
-### Execution via Claude
+### CLI Options
 
-1. Request council summon from Claude
-2. Claude executes the script to collect each Agent's opinion
-3. Claude synthesizes as Chairman and presents final recommendation
+| Option | Description |
+|--------|-------------|
+| `-h, --help` | Show usage information |
+| `-v, --verbose` | Show detailed error output including stderr from agents |
+| `-n, --dry-run` | Preview what would be executed without running agents |
+| `-b, --no-blind` | Disable blind mode (show real agent names to chairman) |
+| `-r, --report FILE` | Save combined report to specific file (disables auto-output) |
+| `-o, --output-dir DIR` | Save auto-generated reports to directory |
 
-## Examples
+### Output Files
 
-### Technical Decision Making
+By default, the council generates **THREE markdown files** in the current directory:
+- `council-minutes_TIMESTAMP.md` - Full deliberation with technical + ethical statements
+- `council-ethics_TIMESTAMP.md` - Ethical sub-chair synthesis only
+- `council-chairman-report_TIMESTAMP.md` - Chairman's verdict with dissenting views
 
-```
-User: "React vs Vue - which fits this project better? Summon the council"
-
-Claude:
-1. Execute council.sh to collect Codex, Gemini opinions
-2. Organize each Agent's perspective
-3. Recommend based on project context
-```
-
-### Architecture Review
-
-```
-User: "Let's hear other AIs' opinions on this design"
-
-Claude:
-1. Summarize current design and query the council
-2. Collect feedback from each Agent
-3. Analyze commonalities/differences and provide synthesis
-```
-
-## Council Members
-
-Council members are configured in `council.config.yaml`. Default members:
-
-| Agent | CLI Command | Characteristics |
-|-------|-------------|-----------------|
-| OpenAI Codex | `codex exec` | Code-focused, pragmatic approach |
-| Google Gemini | `gemini` | Broad knowledge, diverse perspectives |
-| Claude (Chairman) | - | Synthesis and final judgment |
-
-## Requirements
-
-- Each configured CLI must be installed and authenticated
-- Default: OpenAI Codex CLI, Google Gemini CLI
-
-### Verify Installation
+### Examples
 
 ```bash
-codex --version
-gemini --version
+./council.sh --help
+./council.sh -v "Compare React vs Vue"
+./council.sh -o ./reports "Should we use microservices?"
+./council.sh --dry-run "test prompt"
+./council.sh --no-blind "test with real names"
 ```
+
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `COUNCIL_CONFIG` | Override the config file path |
+
+Example:
+```bash
+COUNCIL_CONFIG=/path/to/custom.yaml ./council.sh "prompt"
+```
+
+## Ethical Frameworks
+
+The council applies 6 distinct ethical lenses:
+
+| Framework | Focus | Questions Asked |
+|-----------|-------|-----------------|
+| **Consequentialism** | Outcomes | Greatest good for greatest number? |
+| **Deontology** | Duties | What rules apply regardless of outcome? |
+| **Virtue Ethics** | Character | What would excellent character do? |
+| **Pragmatism** | What works | What has actually worked before? |
+| **Care Ethics** | Harm prevention | Who could be harmed? |
+| **Realpolitik** | Power dynamics | What's the self-interested optimal move? |
+
+## Chairman's Report Structure
+
+The Chairman produces a structured report with:
+
+1. **Battle Lines** - Where council members disagree
+2. **Ethical Spectrum Analysis** - Which framework fits best
+3. **Pressure Test** - Challenging the strongest arguments
+4. **Uncomfortable Truths** - What's being avoided
+5. **The Verdict** - Clear recommendation
+6. **Dissenting Views** - Positions not adopted
+7. **What The Chairman Might Have Missed** - Transparency section
+8. **Confidence Assessment** - HIGH/MEDIUM/LOW
+9. **Open Items** - Questions remaining
 
 ## Configuration
 
-Edit `council.config.yaml` to customize council members:
+Edit `council.config.yaml` to customize:
 
 ```yaml
 council:
   members:
-    - name: codex
-      command: "codex exec"
-      emoji: "🤖"
+    - name: gpt-5.2
+      codename: "The Architect"
+      command: "codex exec -m gpt-5.2"
+      emoji: "🧠"
       color: "BLUE"
-    - name: gemini
-      command: "gemini"
-      emoji: "💎"
-      color: "GREEN"
+      strengths: "strategic planning, system design"
+      persona: "You are a strategic thinker..."
+
+  sub_chairs:
+    - name: utilitarian
+      codename: "The Utilitarian"
+      command: "codex exec -m gpt-4o"
+      emoji: "📊"
+      color: "BLUE"
+      framework: "Consequentialism"
+      prompt: "You are a UTILITARIAN ethical advisor..."
+
+  chairman:
+    command: "claude -p --model claude-opus-4-5"
+
+  settings:
+    parallel: true
+    timeout: 180
 ```
+
+## Cost Considerations
+
+- **Technical Council**: 7 API calls (parallel)
+- **Ethical Sub-Chairs**: 6 API calls (parallel)
+- **Chairman**: 1 API call (sequential, larger context)
+- **Total**: ~14 API calls per council session
 
 ## File Structure
 
 ```
 skills/agent-council/
 ├── SKILL.md              # This document
+├── council.config.yaml   # Council configuration
+├── .gitignore            # Ignores mapping file
 └── scripts/
     └── council.sh        # Council execution script
 ```
 
+## Requirements
+
+CLI tools must be installed and authenticated:
+
+```bash
+codex --version   # OpenAI Codex CLI
+gemini --version  # Google Gemini CLI
+claude --version  # Anthropic Claude CLI
+```
+
 ## Notes
 
-- API costs incurred for each Agent call
-- Response time depends on the slowest Agent
+- API costs incurred for each Agent call (~14 calls per session)
+- Response time depends on the slowest Agent (timeout configurable)
 - Do not share sensitive information with the council
+- All models process in parallel where possible
